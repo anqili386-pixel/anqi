@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brand Book & Posters | Li Anqi</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+        /* --- 核心视觉变量 --- */
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #f4f1ea 100%);
+            --primary: #2a4c3b;
+            --accent: #8FA998;
+            --text-main: #333333;      
+            --text-light: #667067;      
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* 兼容 Firefox */
+        @supports (-moz-appearance:none) {
+            body { zoom: 1; transform: scale(0.9); transform-origin: top center; width: 111.11%; }
+        }
+
+        /* --- 导航栏 --- */
+        nav {
+            position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 1000px; padding: 15px 35px;
+            background: rgba(249, 248, 244, 0.85); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 100px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03); z-index: 1000;
+        }
+        .logo { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--primary); text-decoration: none; font-size: 1.2rem; }
+        .back-link { text-decoration: none; color: var(--primary); display: flex; align-items: center; gap: 8px; font-weight: 500; transition: 0.3s; }
+        .back-link:hover { transform: translateX(-5px); }
+
+        /* --- 第一部分：翻页书区域 --- */
+        .book-section {
+            height: 100vh;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            perspective: 2000px;
+            padding-top: 60px;
+        }
+
+        .book {
+            position: relative;
+            width: 500px; height: 350px; /* A4 横向比例 */
+            transition: transform 0.6s ease-in-out;
+            transform-style: preserve-3d;
+        }
+
+        .paper {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            perspective: 1500px;
+            transform-origin: left;
+            transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+            transform-style: preserve-3d;
+            border-radius: 2px 8px 8px 2px;
+        }
+
+        .front, .back {
+            position: absolute; width: 100%; height: 100%; top: 0; left: 0;
+            backface-visibility: hidden;
+            background-color: white;
+            box-shadow: 1px 1px 5px rgba(0,0,0,0.05);
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden;
+        }
+
+        .front { z-index: 2; }
+        .back { z-index: 1; transform: rotateY(180deg); border-left: 1px solid rgba(0,0,0,0.05); }
+
+        .paper-content { width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+
+        .paper.flipped { transform: rotateY(-180deg); }
+
+        .book-controls {
+            margin-top: 50px; display: flex; gap: 20px; align-items: center;
+            font-family: 'Playfair Display', serif; color: var(--primary);
+        }
+        .ctrl-btn {
+            width: 50px; height: 50px; border-radius: 50%;
+            border: 1px solid var(--primary); background: transparent;
+            color: var(--primary); display: flex; justify-content: center; align-items: center;
+            transition: 0.3s;
+        }
+        .ctrl-btn:hover { background: var(--primary); color: #fff; }
+        .page-indicator { font-size: 0.9rem; letter-spacing: 1px; min-width: 60px; text-align: center; }
+
+        /* --- 第二部分：海报严格比例展示区域 --- */
+        .posters-section {
+            max-width: 1100px; margin: 0 auto; padding: 100px 20px 150px;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif; font-size: 2.5rem; color: var(--primary);
+            text-align: center; margin-bottom: 60px; position: relative;
+        }
+        .section-title::after {
+            content: ''; display: block; width: 60px; height: 2px; background: var(--accent);
+            margin: 20px auto 0;
+        }
+
+        .iso-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3列 */
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* 基础海报样式 (默认 A3) */
+        .poster-card {
+            position: relative;
+            width: 100%;
+            /* 强制纵向 A系列比例 (1 / 1.414) */
+            aspect-ratio: 1 / 1.414; 
+            background: #fff;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+        }
+        
+        .poster-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            z-index: 10;
+        }
+
+        .poster-img {
+            width: 100%; height: 100%;
+            object-fit: cover; 
+            display: block;
+        }
+
+        /* A1 海报特殊样式 (Logo Guideline) */
+        .poster-card.size-a1 {
+            grid-column: span 2; 
+            grid-row: span 2;  
+        }
+
+        .poster-label {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+            color: white; font-size: 0.8rem; opacity: 0; transition: 0.3s;
+            transform: translateY(10px);
+        }
+        .poster-card:hover .poster-label { opacity: 1; transform: translateY(0); }
+
+        /* --- 通用：光标 --- */
+        .cursor-dot { width: 6px; height: 6px; background: var(--primary); position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-outline { width: 30px; height: 30px; border: 1px solid var(--primary); position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9998; pointer-events: none; opacity: 0.6; transition: 0.3s; }
+        body.hovering .cursor-outline { width: 50px; height: 50px; background: rgba(42, 76, 59, 0.1); border-color: transparent; }
+
+        @media (max-width: 850px) {
+            .book { transform: scale(0.6); }
+            .iso-grid { grid-template-columns: 1fr; }
+            .poster-card.size-a1 { grid-column: span 1; grid-row: span 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <nav>
+        <a href="index.html" class="logo hover-trigger">ANQI.LI</a>
+        <a href="index.html" class="back-link hover-trigger"><i class="ri-arrow-left-line"></i> 返回主页</a>
+    </nav>
+
+    <section class="book-section">
+        <div id="book" class="book hover-trigger">
+            </div>
+
+        <div class="book-controls">
+            <button id="prev-btn" class="ctrl-btn hover-trigger"><i class="ri-arrow-left-s-line"></i></button>
+            <span class="page-indicator">Cover</span>
+            <button id="next-btn" class="ctrl-btn hover-trigger"><i class="ri-arrow-right-s-line"></i></button>
+        </div>
+        <p style="margin-top: 10px; font-size: 0.8rem; color: #999;">点击书本右侧翻页</p>
+    </section>
+
+   <section class="posters-section">
+        <h2 class="section-title">Brand Posters</h2>
+        
+        <div class="iso-grid">
+            
+            <div class="poster-card size-a1 hover-trigger">
+                <img src="images/posters/guideline.png" class="poster-img" alt="Logo Guidelines A1">
+                <div class="poster-label">Logo Guidelines (A1)</div>
+            </div>
+
+            <div class="poster-card hover-trigger">
+                <img src="images/posters/poster1.png" class="poster-img" alt="Poster 1">
+                <div class="poster-label">Promotional Poster 01</div>
+            </div>
+
+            <div class="poster-card hover-trigger">
+                <img src="images/posters/poster2.png" class="poster-img" alt="Poster 2">
+                <div class="poster-label">Promotional Poster 02</div>
+            </div>
+
+            <div class="poster-card hover-trigger">
+                <img src="images/posters/poster3.png" class="poster-img" alt="Poster 3">
+                <div class="poster-label">Visual Concept 03</div>
+            </div>
+
+            <div class="poster-card hover-trigger">
+                <img src="images/posters/poster4.png" class="poster-img" alt="Poster 4">
+                <div class="poster-label">Event Poster 04</div>
+            </div>
+
+            <div class="poster-card hover-trigger">
+                <img src="images/posters/poster5.png" class="poster-img" alt="Poster 5">
+                <div class="poster-label">Typography Poster 05</div>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+        // --- JS 配置区域 ---
+        const totalPages = 52; 
+        const bookContainer = document.getElementById('book');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const indicator = document.querySelector('.page-indicator');
+        
+        const totalSheets = Math.ceil(totalPages / 2);
+        let currentSheet = 0; 
+
+        // 【重点】这里已经帮你改好了 png 路径
+        function getImageUrl(pageNum) {
+            return `images/book/p${pageNum}.png`; 
+        }
+
+        // 生成书页
+        for (let i = 0; i < totalSheets; i++) {
+            const sheetIndex = i + 1;
+            const frontPageNum = (i * 2) + 1;
+            const backPageNum = (i * 2) + 2;
+            const sheet = document.createElement('div');
+            sheet.classList.add('paper');
+            sheet.id = `sheet-${sheetIndex}`;
+            sheet.style.zIndex = totalSheets - i;
+
+            // 【已修改】删除了原本 img 标签后面的 span 标签，不再显示重复页码
+            sheet.innerHTML = `
+                <div class="front">
+                    <img src="${getImageUrl(frontPageNum)}" class="paper-content" onerror="this.src='https://via.placeholder.com/500x350?text=Missing+Img'">
+                </div>
+                <div class="back">
+                    <img src="${getImageUrl(backPageNum)}" class="paper-content" onerror="this.src='https://via.placeholder.com/500x350?text=Missing+Img'">
+                </div>
+            `;
+            bookContainer.appendChild(sheet);
+        }
+
+        const sheets = document.querySelectorAll('.paper');
+
+        function updateBookPosition() {
+            if (currentSheet === 0) {
+                bookContainer.style.transform = "translateX(0%)";
+                indicator.innerText = "Cover";
+            } else if (currentSheet === totalSheets) {
+                bookContainer.style.transform = "translateX(100%)";
+                indicator.innerText = "End";
+            } else {
+                bookContainer.style.transform = "translateX(50%)";
+                indicator.innerText = `${currentSheet * 2} / ${totalPages}`;
+            }
+            if(window.innerWidth < 850) {
+                bookContainer.style.transform = (currentSheet === 0) ? "translateX(0) scale(0.6)" : "translateX(0) scale(0.6)"; 
+            }
+        }
+
+        function goNext() {
+            if (currentSheet < totalSheets) {
+                const sheet = sheets[currentSheet];
+                sheet.classList.add('flipped');
+                sheet.style.zIndex = 1 + currentSheet; 
+                currentSheet++;
+                updateBookPosition();
+            }
+        }
+
+        function goPrev() {
+            if (currentSheet > 0) {
+                currentSheet--;
+                const sheet = sheets[currentSheet];
+                sheet.classList.remove('flipped');
+                sheet.style.zIndex = totalSheets - currentSheet;
+                updateBookPosition();
+            }
+        }
+
+        nextBtn.addEventListener('click', goNext);
+        prevBtn.addEventListener('click', goPrev);
+        bookContainer.addEventListener('click', (e) => {
+             if(currentSheet < totalSheets) goNext();
+             else goPrev();
+        });
+
+        // --- 光标逻辑 ---
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        
+        // 修正：确保元素存在才执行
+        if (cursorDot && cursorOutline) {
+            window.addEventListener('mousemove', function(e) {
+                const posX = e.clientX;
+                const posY = e.clientY;
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+                cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
+            });
+
+            document.querySelectorAll('.hover-trigger, a, button').forEach(trigger => {
+                trigger.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                trigger.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+            });
+        }
+    </script>
+</body>
+</html>

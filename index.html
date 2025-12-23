@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>李安琪 Li Anqi | Creative Visual Designer</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+    
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+        /* --- 🎨 视觉系统 --- */
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #f4f1ea 100%);
+            --glass-bg: rgba(255, 255, 255, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.8);
+            --glass-shadow: 0 10px 40px -10px rgba(46, 61, 50, 0.08);
+            --primary: #2a4c3b;
+            --secondary: #1a1a1a;
+            --accent: #8FA998;
+            --text-main: #333333;      
+            --text-light: #667067;     
+            --blob-1: #dbe7d5;         
+            --blob-2: #e8e0cf;         
+            --radius-lg: 20px;
+        }
+
+        /* --- 基础设置 --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+            selection-background-color: var(--blob-1);
+            
+            /* 🌟 核心修改：全局缩小至 90% */
+            zoom: 0.9; 
+        }
+
+        /* 针对 Firefox 的兼容（Firefox 不支持 zoom，使用 scale 模拟，效果可能略有差异） */
+        @supports (-moz-appearance:none) {
+            body {
+                zoom: 1;
+                transform: scale(0.9);
+                transform-origin: top center;
+                width: 111.11%; /* 补偿 scale 带来的宽度损失 */
+            }
+        }
+
+        h1, h2, h3, .logo, .large-email { font-family: 'Playfair Display', serif; color: var(--primary); }
+
+        /* --- 光标 --- */
+        .cursor-dot {
+            width: 6px; height: 6px; background: var(--primary);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9999; pointer-events: none;
+        }
+        .cursor-outline {
+            width: 30px; height: 30px; border: 1px solid var(--primary);
+            position: fixed; top: 0; left: 0; transform: translate(-50%, -50%);
+            border-radius: 50%; z-index: 9998; pointer-events: none;
+            transition: width 0.3s, height 0.3s, opacity 0.3s; /* 移除 transform 动画以配合 JS */
+            opacity: 0.6;
+        }
+        body.hovering .cursor-outline { width: 50px; height: 50px; background: rgba(42, 76, 59, 0.1); border-color: transparent; }
+
+        /* --- 导航 --- */
+        nav {
+            position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 1000px; padding: 15px 35px;
+            background: rgba(249, 248, 244, 0.85); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 100px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03); z-index: 1000;
+        }
+        .logo { font-size: 1.3rem; font-weight: 700; letter-spacing: 1px; color: var(--primary); }
+        .nav-links a {
+            text-decoration: none; color: var(--text-main); margin-left: 35px;
+            font-size: 0.9rem; font-weight: 500; transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* --- 布局 --- */
+        section { padding: 120px 8%; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; position: relative; }
+        .section-header { margin-bottom: 70px; }
+        .section-subtitle { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: var(--text-light); font-weight: 500; margin-bottom: 15px; display: block; }
+        .section-title { font-size: 3.5rem; font-style: italic; color: var(--primary); }
+        
+        .glass-panel {
+            background: var(--glass-bg); backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);
+            border-radius: var(--radius-lg);
+        }
+
+        /* --- 首页 Hero --- */
+        #home { align-items: flex-start; }
+        .hero-text-box { max-width: 600px; z-index: 2; }
+        h1 { font-size: 4.8rem; line-height: 1.1; margin-bottom: 30px; color: var(--primary); }
+        h1 span { font-style: italic; font-weight: 400; opacity: 0.8; }
+        .hero-desc { font-size: 1.15rem; color: var(--text-light); margin-bottom: 45px; max-width: 500px; }
+        
+        .btn-group { display: flex; gap: 20px; }
+        .btn {
+            padding: 15px 38px; border-radius: 50px; text-decoration: none;
+            font-weight: 500; transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-primary { background: var(--primary); color: #f9f8f4; box-shadow: 0 10px 25px rgba(42, 76, 59, 0.25); }
+        .btn-primary:hover { transform: translateY(-3px); background: #1e362a; }
+        .btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+        .btn-outline:hover { background: var(--primary); color: #f9f8f4; }
+
+        /* --- 3D 浮动区域 --- */
+        .hero-visuals { 
+            position: absolute; right: 2%; top: 15%; 
+            width: 550px; height: 600px; 
+            pointer-events: none;
+        }
+        
+        .float-obj {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+            filter: drop-shadow(0 15px 25px rgba(42, 76, 59, 0.15));
+            transition: transform 0.3s;
+        }
+        .float-obj:hover { transform: scale(1.1); }
+
+        .photo-card {
+            position: absolute; top: 0; left: 80px; 
+            width: 240px; height: 320px;
+            padding: 10px; background: #fff;
+            transform: rotate(-3deg);
+            box-shadow: 0 20px 40px rgba(42, 76, 59, 0.1);
+            border-radius: 12px;
+            z-index: 5;
+        }
+        .photo-card img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+
+        /* 图标位置定义 */
+        .icon-ps { width: 70px; top: 250px; left: -20px; z-index: 6; animation-delay: -1s; }
+        .icon-ai { width: 70px; top: 100px; left: -40px; z-index: 4; animation-delay: -2.5s; transform: rotate(-8deg); }
+        .icon-figma { width: 80px; top: -30px; left: 200px; z-index: 4; animation-delay: -2s; transform: rotate(10deg); }
+        .icon-gemini { width: 65px; top: 80px; right: 50px; z-index: 6; animation-delay: -3.5s; }
+        .icon-id { width: 70px; bottom: 120px; right: 60px; z-index: 6; animation-delay: -5s; transform: rotate(-10deg); }
+
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        /* --- 关于 About --- */
+        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 30px; }
+        .info-card { padding: 40px; transition: transform 0.4s; }
+        .info-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.95); }
+        .card-header { display: flex; align-items: center; gap: 12px; margin-bottom: 25px; border-bottom: 1px solid rgba(0,0,0,0.05); padding-bottom: 15px; }
+        
+        .timeline-item { position: relative; padding-left: 20px; margin-bottom: 30px; border-left: 1px solid rgba(42, 76, 59, 0.2); }
+        .timeline-item:last-child { margin-bottom: 0; }
+        .timeline-item::before { content: ''; position: absolute; left: -4px; top: 8px; width: 7px; height: 7px; background: var(--primary); border-radius: 50%; }
+        .t-date { font-size: 0.8rem; color: var(--accent); font-weight: 600; margin-bottom: 4px; display: block; }
+        .t-title { font-size: 1.1rem; font-weight: 600; color: var(--secondary); margin-bottom: 5px; }
+        .t-desc { font-size: 0.9rem; color: var(--text-light); line-height: 1.6; }
+        
+        .tag { padding: 6px 14px; background: #f0f2ef; border-radius: 6px; font-size: 0.85rem; color: var(--primary); display: inline-block; margin: 0 5px 5px 0;}
+        
+        /* --- 作品集 --- */
+        .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 40px; }
+        .project-card { background: #fff; border-radius: 16px; overflow: hidden; box-shadow: 0 15px 35px rgba(0,0,0,0.03); transition: all 0.4s ease; display: flex; flex-direction: column;}
+        .project-card:hover { transform: translateY(-8px); box-shadow: 0 25px 50px rgba(42, 76, 59, 0.1); }
+        .project-preview { height: 280px; width: 100%; background: #f2f0eb; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .project-content { padding: 35px; flex-grow: 1; }
+        .project-tag { font-size: 0.7rem; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; display: block; }
+        .project-title { font-size: 1.4rem; margin-bottom: 10px; font-weight: 500; font-family: 'Playfair Display', serif; }
+        .project-desc { color: var(--text-light); font-size: 0.95rem; line-height: 1.6; }
+
+        /* 抽象图形 */
+        .ui-abstract { position: relative; width: 100%; height: 100%; }
+        .brand-viz { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80px; height: 80px; background: var(--primary); border-radius: 50%; }
+        .brand-viz::after { content: ''; position: absolute; top: -20px; left: 40px; width: 60px; height: 60px; background: var(--accent); opacity: 0.8; }
+        .ip-viz { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; background: #E8E0CF; border-radius: 40px; }
+        .ip-viz::before, .ip-viz::after { content: ''; position: absolute; top: -10px; width: 30px; height: 30px; background: #E8E0CF; border-radius: 50%; }
+        .ip-viz::before { left: 0; } .ip-viz::after { right: 0; }
+        .ip-eye { position: absolute; top: 40px; left: 30px; width: 10px; height: 10px; background: var(--primary); border-radius: 50%; box-shadow: 30px 0 0 var(--primary); }
+        .intern-viz { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 160px; background: #fff; box-shadow: 0 5px 15px rgba(0,0,0,0.05); padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+        .intern-line { height: 8px; background: #eee; width: 100%; border-radius: 4px; }
+        .intern-block { flex: 1; background: var(--blob-1); border-radius: 4px; }
+        .ui-viz { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 120px; height: 180px; border: 4px solid var(--text-main); border-radius: 15px; background: #fff; overflow: hidden; }
+        .ui-header { height: 20px; background: var(--text-main); }
+        .ui-body { padding: 10px; }
+        .ui-btn { width: 40px; height: 40px; background: var(--accent); border-radius: 8px; margin-bottom: 10px; }
+
+        .contact-box { padding: 80px; background: rgba(255, 255, 255, 0.5); text-align: center; }
+        .contact-meta { display: flex; justify-content: center; gap: 40px; color: var(--text-light); margin-top: 20px;}
+        .bg-blob { position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.5; z-index: -1; animation: pulse 10s infinite alternate; }
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 3rem; }
+            section { padding: 100px 6%; }
+            .hero-visuals { display: none; }
+            .btn-group { flex-direction: column; width: 100%; }
+            .contact-meta { flex-direction: column; gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <div class="bg-blob" style="top: -10%; left: -10%; width: 600px; height: 600px; background: var(--blob-1);"></div>
+    <div class="bg-blob" style="top: 40%; right: -10%; width: 500px; height: 500px; background: var(--blob-2); animation-delay: -3s;"></div>
+
+    <nav>
+        <div class="logo">ANQI.LI</div>
+        <div class="nav-links">
+            <a href="#home" class="hover-trigger">首页</a>
+            <a href="#about" class="hover-trigger">关于</a>
+            <a href="#portfolio" class="hover-trigger">作品</a>
+            <a href="#contact" class="hover-trigger">联系</a>
+        </div>
+    </nav>
+
+    <section id="home">
+        <div class="hero-text-box">
+            <span class="section-subtitle">Portfolio 2025</span>
+            <h1>Hello, I'm 安琪<br><span>Creative Visual Designer</span></h1>
+            <p class="hero-desc">
+                我始终相信，好的创意视觉无需堆砌花哨元素，而是用精准的视觉语言，把品牌核心信息清晰传递给用户。
+            </p>
+            <div class="btn-group">
+                <a href="#portfolio" class="btn btn-primary hover-trigger">
+                    <i class="ri-arrow-down-line"></i> 浏览作品
+                </a>
+                <a href="./李安琪简历.pdf" target="_blank" class="btn btn-outline hover-trigger">
+                    <i class="ri-file-user-line"></i> 查看简历 PDF
+                </a>
+            </div>
+        </div>
+
+        <div class="hero-visuals">
+            <div class="float-obj photo-card">
+                <img src="./me.jpg" alt="Li Anqi">
+            </div>
+            
+            <img src="./ai.png" class="float-obj icon-ai" alt="Illustrator">
+            
+            <img src="./ps.png" class="float-obj icon-ps" alt="Photoshop">
+            <img src="./figma.png" class="float-obj icon-figma" alt="Figma">
+            <img src="./gemini.png" class="float-obj icon-gemini" alt="Gemini">
+            <img src="./id.png" class="float-obj icon-id" alt="InDesign">
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="section-header">
+            <span class="section-subtitle">Biography</span>
+            <h2 class="section-title">My Journey</h2>
+        </div>
+        <div class="about-grid">
+            <div class="info-card glass-panel hover-trigger">
+                <div class="card-header"><i class="ri-graduation-cap-line"></i><h3>教育背景</h3></div>
+                <div class="timeline-item"><span class="t-date">2022.09 - 2025.12</span><div class="t-title">UCSI University (马来西亚)</div><div class="t-desc">平面设计 本科 | QS 284</div></div>
+                <div class="timeline-item"><span class="t-date">2019.10 - 2020.10</span><div class="t-title">Limkokwing University</div><div class="t-desc">设计专业 预科</div></div>
+            </div>
+            
+            <div class="info-card glass-panel hover-trigger">
+                <div class="card-header"><i class="ri-briefcase-line"></i><h3>工作经历</h3></div>
+                <div class="timeline-item">
+                    <span class="t-date">2024.09 – 2025.01</span>
+                    <div class="t-title">NIO 蔚来汽车 | 设计实习</div>
+                    <div class="t-desc">负责社交媒体视觉输出与品牌物料延展，维护品牌高端调性。</div>
+                </div>
+                <div class="timeline-item">
+                    <span class="t-date">2023.10 – 2024.01</span>
+                    <div class="t-title">河南省广播电视台 | 实习编辑</div>
+                    <div class="t-desc">频道宣传海报设计与视频视觉优化。</div>
+                </div>
+                <div class="timeline-item">
+                    <span class="t-date">2021.01 - 2022.07</span>
+                    <div class="t-title">郑州心田花开学校 | 分校区管理</div>
+                    <div class="t-desc">从课程顾问晋升至管理岗。引导学员转化提升续报率；统筹校区日常运转；优化家校沟通流程，协助提升整体服务质量。</div>
+                </div>
+            </div>
+
+            <div class="info-card glass-panel hover-trigger">
+                <div class="card-header"><i class="ri-tools-line"></i><h3>专业技能</h3></div>
+                <div class="skill-tags">
+                    <span class="tag">Photoshop</span><span class="tag">Illustrator</span><span class="tag">Figma</span>
+                    <span class="tag">InDesign</span><span class="tag">Shapr 3D</span><span class="tag">Premiere</span>
+                </div>
+                
+                <div class="card-header" style="margin-bottom: 15px; border:none; padding:0; margin-top: 30px;">
+                    <i class="ri-user-smile-line"></i>
+                    <h3>自我评价</h3>
+                </div>
+                <div style="font-size: 0.95rem; color: var(--text-main); line-height: 1.8;">
+                    <p style="margin-bottom: 12px;">
+                        <strong>具备独立完成视觉设计项目的能力</strong>，能够在创作过程中同步进行文案构思与内容整合，确保视觉与信息表达的一致性。
+                    </p>
+                    <p style="margin-bottom: 12px;">
+                        面对新工具与新问题，能够快速拆解需求并进行针对性学习与验证。<strong>一天内完成 Gemini 3 的实践学习并独立搭建上线个人作品集网站</strong>，具备较强的问题解决与项目执行能力。
+                    </p>
+                    <p>
+                        <strong>性格外向开朗，沟通能力强（普通话二级甲等）</strong>。善于在团队协作中高效推进项目执行，思维清晰、执行力强，具备良好的责任感与合作意识。
+                    </p>
+                </div>
+    </section>
+
+    <section id="portfolio">
+        <div class="section-header">
+            <span class="section-subtitle">Selected Works</span>
+            <h2 class="section-title">Design Categories</h2>
+        </div>
+        
+        <div class="portfolio-grid">
+            <a href="branding.html" class="project-card hover-trigger" style="text-decoration: none; color: inherit; width: 100%; display: flex;">
+                <div class="project-preview">
+                    <div class="ui-abstract"><div class="brand-viz"></div></div>
+                </div>
+                <div class="project-content">
+                    <span class="project-tag">Branding & VI</span>
+                    <h4 class="project-title">品牌设计</h4>
+                    <p class="project-desc">构建具有辨识度的品牌视觉识别系统。</p>
+                </div>
+            </a>
+
+            <a href="ip-design.html" class="project-card hover-trigger" style="text-decoration: none; color: inherit; width: 100%; display: flex;">
+                <div class="project-preview">
+                    <div class="ui-abstract"><div class="ip-viz"><div class="ip-eye"></div></div></div>
+                </div>
+                <div class="project-content">
+                    <span class="project-tag">Character Design</span>
+                    <h4 class="project-title">IP 形象设计</h4>
+                    <p class="project-desc">创作生动的IP角色。</p>
+                </div>
+            </a>
+
+            <a href="internship.html" class="project-card hover-trigger" style="text-decoration: none; color: inherit; width: 100%; display: flex;">
+                <div class="project-preview">
+                    <div class="ui-abstract"><div class="intern-viz"><div class="intern-line"></div><div class="intern-block"></div></div></div>
+                </div>
+                <div class="project-content">
+                    <span class="project-tag">Internship Works</span>
+                    <h4 class="project-title">实习产出</h4>
+                    <p class="project-desc">蔚来汽车(NIO)实习作品。</p>
+                </div>
+            </a>
+
+            <a href="ui-ux.html" class="project-card hover-trigger" style="text-decoration: none; color: inherit; width: 100%; display: flex;">
+                <div class="project-preview">
+                    <div class="ui-abstract"><div class="ui-viz"><div class="ui-header"></div><div class="ui-body"><div class="ui-btn"></div><div class="intern-line"></div></div></div></div>
+                </div>
+                <div class="project-content">
+                    <span class="project-tag">UI/UX & Projects</span>
+                    <h4 class="project-title">UI & 参与项目</h4>
+                    <p class="project-desc">用户体验的界面设计与综合项目协作。</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section id="contact">
+        <div class="glass-panel contact-box hover-trigger">
+            <span class="section-subtitle">Get in Touch</span>
+            <h2>Let's Create Together</h2>
+            <a href="mailto:973729230@qq.com" class="large-email">973729230@qq.com</a>
+            <div class="contact-meta">
+                <div><i class="ri-phone-line"></i> 17629345391</div>
+                <div><i class="ri-map-pin-line"></i> Zhengzhou, China</div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p style="color: var(--text-light); font-size: 0.8rem; padding: 50px; text-align: center; opacity: 0.7;">© 2025 Li Anqi. Designed with Elegance.</p>
+    </footer>
+
+    <script>
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        
+        // 🌟 核心修正：因为页面缩小了0.9，所以鼠标坐标需要除以 0.9 才能对齐
+        const zoomLevel = 0.9;
+
+        window.addEventListener('mousemove', function(e) {
+            // 获取鼠标真实坐标并进行缩放补偿
+            const posX = e.clientX / zoomLevel;
+            const posY = e.clientY / zoomLevel;
+
+            cursorDot.style.left = `${posX}px`; 
+            cursorDot.style.top = `${posY}px`;
+            
+            cursorOutline.animate({ 
+                left: `${posX}px`, 
+                top: `${posY}px` 
+            }, { duration: 500, fill: "forwards" });
+        });
+
+        document.querySelectorAll('.hover-trigger, a, button').forEach(trigger => {
+            trigger.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            trigger.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.style.opacity = "1"; entry.target.style.transform = "translateY(0)"; } });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.info-card, .project-card, .hero-text-box, .contact-box').forEach(el => {
+            el.style.opacity = "0"; el.style.transform = "translateY(30px)"; el.style.transition = "all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)";
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

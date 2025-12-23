@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IP Design Gallery | Li Anqi</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+        /* --- 核心视觉变量 --- */
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #f4f1ea 100%);
+            --primary: #2a4c3b;
+            --accent: #8FA998;
+            --text-main: #333333;      
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        /* 导航栏 */
+        nav {
+            position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 1000px; padding: 15px 35px;
+            background: rgba(249, 248, 244, 0.85); backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 100px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03); z-index: 1000;
+        }
+        .logo { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--primary); text-decoration: none; font-size: 1.2rem; }
+        .back-link { text-decoration: none; color: var(--primary); display: flex; align-items: center; gap: 8px; font-weight: 500; transition: 0.3s; }
+        .back-link:hover { transform: translateX(-5px); }
+
+        /* --- IP 展示区域 --- */
+        .gallery-section {
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 140px 40px 100px; 
+        }
+
+        .section-header {
+            text-align: center; margin-bottom: 80px;
+        }
+        .section-title {
+            font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--primary);
+            margin-bottom: 15px;
+        }
+        .section-subtitle {
+            color: var(--accent); font-size: 1rem; letter-spacing: 2px; text-transform: uppercase;
+        }
+
+        /* 16:9 网格布局 */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 电脑端两列 */
+            gap: 40px;
+            align-items: start;
+        }
+
+        .gallery-item {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16 / 9; /* 强制 16:9 比例 */
+            border-radius: 12px;
+            overflow: hidden;
+            background: #e8e0cf; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+            opacity: 0; animation: fadeUp 0.8s forwards;
+        }
+
+        .gallery-item:nth-child(odd) { animation-delay: 0.1s; }
+        .gallery-item:nth-child(even) { animation-delay: 0.2s; }
+
+        .gallery-item:hover {
+            transform: translateY(-5px) scale(1.01);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .gallery-img {
+            width: 100%; height: 100%;
+            object-fit: cover; 
+            display: block;
+            transition: transform 0.6s ease;
+        }
+        
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.05); 
+        }
+
+        .item-number {
+            position: absolute; bottom: 20px; right: 20px;
+            background: rgba(255,255,255,0.9); padding: 5px 12px;
+            border-radius: 20px; font-size: 0.8rem; color: var(--primary);
+            font-weight: 500; backdrop-filter: blur(5px);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 光标 --- */
+        .cursor-dot { width: 6px; height: 6px; background: var(--primary); position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9999; pointer-events: none; }
+        .cursor-outline { width: 30px; height: 30px; border: 1px solid var(--primary); position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 9998; pointer-events: none; opacity: 0.6; transition: 0.3s; }
+        body.hovering .cursor-outline { width: 50px; height: 50px; background: rgba(42, 76, 59, 0.1); border-color: transparent; }
+
+        @media (max-width: 850px) {
+            .gallery-grid { grid-template-columns: 1fr; gap: 20px; }
+            .section-title { font-size: 2rem; }
+            nav { padding: 15px 20px; width: 95%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <nav>
+        <a href="index.html" class="logo hover-trigger">ANQI.LI</a>
+        <a href="index.html" class="back-link hover-trigger"><i class="ri-arrow-left-line"></i> 返回主页</a>
+    </nav>
+
+    <section class="gallery-section">
+        <header class="section-header">
+            <h1 class="section-title">IP Character Design</h1>
+            <p class="section-subtitle">Visual Development & Concept Art</p>
+        </header>
+
+        <div id="gallery-container" class="gallery-grid"></div>
+    </section>
+
+    <script>
+        // --- 1. 自动生成 12 张 IP 图片 (.jpg) ---
+        const container = document.getElementById('gallery-container');
+        
+        // 【已修改】这里设定为 12 张
+        const totalImages = 12;
+
+        for (let i = 1; i <= totalImages; i++) {
+            const item = document.createElement('div');
+            item.classList.add('gallery-item', 'hover-trigger');
+            
+            // 补零逻辑：01, 02... 10, 11, 12
+            const displayNum = i < 10 ? `0${i}` : i;
+
+            // 【已修改】读取 .jpg 格式
+            item.innerHTML = `
+                <img src="images/ip/ip${i}.jpg" 
+                     class="gallery-img" 
+                     alt="IP Design ${i}"
+                     onerror="this.src='https://via.placeholder.com/1600x900/e8e0cf/2a4c3b?text=Missing+ip${i}.jpg'">
+                <div class="item-number">${displayNum}</div>
+            `;
+            
+            container.appendChild(item);
+        }
+
+        // --- 2. 光标逻辑 ---
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        
+        if (cursorDot && cursorOutline) {
+            window.addEventListener('mousemove', function(e) {
+                const posX = e.clientX;
+                const posY = e.clientY;
+                cursorDot.style.left = `${posX}px`;
+                cursorDot.style.top = `${posY}px`;
+                cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
+            });
+
+            setTimeout(() => {
+                document.querySelectorAll('.hover-trigger').forEach(trigger => {
+                    trigger.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+                    trigger.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+                });
+            }, 100);
+        }
+    </script>
+</body>
+</html>

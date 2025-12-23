@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Works Collection | Li Anqi</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
+
+    <style>
+        /* --- 1. 核心视觉系统 --- */
+        :root {
+            --bg-gradient: radial-gradient(circle at 50% 0%, #ffffff 0%, #f4f1ea 100%);
+            --primary: #2a4c3b;
+            --accent: #8FA998;
+            --text-main: #333333;       
+            --text-light: #555555;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            overflow-x: hidden;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* --- 导航栏 (Fixed) --- */
+        nav {
+            position: fixed; top: 25px; left: 50%; transform: translateX(-50%);
+            width: 92%; max-width: 1000px; padding: 15px 35px;
+            background: rgba(249, 248, 244, 0.9); backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6); border-radius: 100px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03); z-index: 1000;
+        }
+        .logo { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--primary); text-decoration: none; font-size: 1.2rem; }
+        .back-link { text-decoration: none; color: var(--primary); display: flex; align-items: center; gap: 8px; font-weight: 500; transition: 0.3s; }
+        .back-link:hover { transform: translateX(-5px); }
+
+        /* --- 主容器 Layout --- */
+        .main-container {
+            width: 100%;
+            max-width: 1000px; /* 限制内容最大宽度，保持精致感 */
+            margin: 0 auto;
+            padding-top: 140px; /* 给导航栏留出空间 */
+            padding-bottom: 100px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* --- 模块通用样式 --- */
+        .section-label {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem; color: var(--primary); font-weight: 700;
+            margin-bottom: 30px;
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.8s ease;
+            text-align: center;
+        }
+        
+        .section-sub {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem; color: var(--accent); letter-spacing: 2px;
+            text-transform: uppercase; display: block; margin-bottom: 5px;
+        }
+
+        /* --- UI 模块 (A1) --- */
+        .ui-wrapper {
+            width: 100%;
+            margin-bottom: 120px; /* 模块间距 */
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        .ui-card {
+            width: 90%; /* 不占满，留点白边更有呼吸感 */
+            max-width: 800px; /* A1图不需要无限宽 */
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
+            overflow: hidden;
+            opacity: 0; transform: translateY(40px);
+            transition: all 0.8s ease;
+        }
+
+        .ui-card img {
+            width: 100%;
+            height: auto; /* 高度自适应，显示长图全貌 */
+            display: block;
+        }
+
+        /* --- 分割线 --- */
+        .divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(42, 76, 59, 0.2), transparent);
+            margin: 0 0 80px 0;
+        }
+
+        /* --- 项目模块 (16:9 Grid) --- */
+        .projects-wrapper {
+            width: 100%;
+            display: flex; flex-direction: column; align-items: center;
+            gap: 60px; /* 项目之间的间距 */
+        }
+
+        /* 新增：项目介绍文字样式 */
+        .project-intro {
+            max-width: 700px; /* 限制宽度 */
+            margin: -10px 0 20px 0; /* 调整间距 */
+            text-align: justify; /* 两端对齐 */
+            font-size: 1rem;
+            line-height: 1.8; /* 增加行高 */
+            color: var(--text-light);
+            padding: 0 20px;
+            opacity: 0; transform: translateY(20px);
+            transition: all 0.8s ease;
+        }
+
+        .project-card {
+            width: 90%;
+            max-width: 900px;
+            aspect-ratio: 16 / 9;
+            position: relative;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+            overflow: hidden;
+            opacity: 0; transform: translateY(40px); /* 初始隐藏，滚动触发 */
+            transition: all 0.6s ease;
+        }
+
+        .project-card img {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.6s ease;
+        }
+
+        /* 悬停效果 */
+        .project-card:hover { transform: translateY(-5px); box-shadow: 0 25px 50px rgba(0,0,0,0.12); }
+        .project-card:hover img { transform: scale(1.03); }
+
+        .p-label {
+            position: absolute; top: 20px; left: 20px;
+            background: rgba(255,255,255,0.95); padding: 8px 16px; border-radius: 6px;
+            font-family: 'Playfair Display', serif; color: var(--primary); font-weight: 700;
+            opacity: 0; transform: translateY(-10px); transition: 0.3s;
+        }
+        .project-card:hover .p-label { opacity: 1; transform: translateY(0); }
+
+        /* --- 滚动触发显示类 --- */
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- 光标 --- */
+        .cursor-dot { width: 6px; height: 6px; background: var(--primary); position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 10001; pointer-events: none; }
+        .cursor-outline { width: 30px; height: 30px; border: 1px solid var(--primary); position: fixed; top: 0; left: 0; transform: translate(-50%, -50%); border-radius: 50%; z-index: 10000; pointer-events: none; opacity: 0.6; transition: 0.3s; }
+        body.hovering .cursor-outline { width: 50px; height: 50px; background: rgba(42, 76, 59, 0.1); border-color: transparent; }
+
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot" data-cursor-dot></div>
+    <div class="cursor-outline" data-cursor-outline></div>
+
+    <nav>
+        <a href="index.html" class="logo hover-trigger">ANQI.LI</a>
+        <a href="index.html" class="back-link hover-trigger"><i class="ri-arrow-left-line"></i> 返回主页</a>
+    </nav>
+
+    <div class="main-container">
+        
+        <div class="ui-wrapper">
+            <div class="section-label reveal">
+                <span class="section-sub">01. Selected Work</span>
+                UI Design Poster
+            </div>
+            
+            <div class="ui-card reveal hover-trigger">
+                <img src="images/ui/ui_poster.png" alt="UI Design A1 Poster" loading="lazy">
+            </div>
+        </div>
+
+        <div class="divider reveal"></div>
+
+        <div class="projects-wrapper" id="projectsContainer">
+            <div class="section-label reveal">
+                <span class="section-sub">02. Collection</span>
+                Participating Projects
+            </div>
+
+            <div class="project-intro reveal">
+                本次小组课业作业需完成 3D 模型搭建与贴图任务，团队成员均无相关基础。我主动承担建模工作，通过 3 天高强度自主学习快速掌握 Shapr 3D 工具，独立完成小组项目模型搭建；随后使用 Adobe Dimension 完成贴图全制作，输出的成果保障了小组作业的高效推进，顺利支撑了小组作业展示。
+            </div>
+            
+            </div>
+
+    </div>
+
+    <script>
+        // --- 1. 动态生成项目卡片 ---
+        const projectContainer = document.getElementById('projectsContainer');
+        const projectCount = 9;
+        const projectPath = 'images/projects/p'; // 图片路径前缀
+        
+        for (let i = 1; i <= projectCount; i++) {
+            const div = document.createElement('div');
+            div.classList.add('project-card', 'reveal', 'hover-trigger');
+            
+            const num = i < 10 ? `0${i}` : i;
+            
+            div.innerHTML = `
+                <div class="p-label">Part. ${num}</div>
+                <img src="${projectPath}${i}.png" alt="Participating Project ${i}" loading="lazy">
+            `;
+            projectContainer.appendChild(div);
+        }
+
+        // --- 2. 滚动显现动画 (Scroll Reveal) ---
+        // 使用 IntersectionObserver 实现高性能的滚动监听
+        const observerOptions = {
+            threshold: 0.15, // 元素进入视口 15% 时触发
+            rootMargin: "0px 0px -50px 0px" // 稍微提前一点触发
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    observer.unobserve(entry.target); // 动画只播放一次
+                }
+            });
+        }, observerOptions);
+
+        // 监听所有带 .reveal 的元素
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // --- 3. 光标逻辑 (保持一致) ---
+        const cursorDot = document.querySelector('[data-cursor-dot]');
+        const cursorOutline = document.querySelector('[data-cursor-outline]');
+        
+        window.addEventListener('mousemove', (e) => {
+            const posX = e.clientX;
+            const posY = e.clientY;
+            cursorDot.style.left = `${posX}px`;
+            cursorDot.style.top = `${posY}px`;
+            cursorOutline.animate({ left: `${posX}px`, top: `${posY}px` }, { duration: 500, fill: "forwards" });
+        });
+
+        document.body.addEventListener('mouseover', (e) => {
+            if(e.target.closest('.hover-trigger') || e.target.tagName === 'A') {
+                document.body.classList.add('hovering');
+            } else {
+                document.body.classList.remove('hovering');
+            }
+        });
+    </script>
+</body>
+</html>
